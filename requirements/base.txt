@@ -1,0 +1,11 @@
+# Dépendances principales du projet
+django>=5.0
+django-tailwind>=3.8
+yfinance>=0.2.40
+duckdb>=1.0
+pandas>=2.2
+numpy>=1.26
+hmmlearn>=0.3
+statsmodels>=0.14
+pandas-datareader>=0.10
+python-dotenv>=1.0

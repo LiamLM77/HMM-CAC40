@@ -1,0 +1,41 @@
+ticker,nom,secteur
+AI.PA,Air Liquide,Chimie
+AIR.PA,Airbus,Aeronautique
+ALO.PA,Alstom,Transport ferroviaire
+MT.AS,ArcelorMittal,Metallurgie
+CS.PA,Axa,Assurance
+BNP.PA,BNP Paribas,Banque
+EN.PA,Bouygues,Construction/Telecom
+CAP.PA,Capgemini,Services informatiques
+CA.PA,Carrefour,Distribution
+ACA.PA,Credit Agricole,Banque
+BN.PA,Danone,Agroalimentaire
+DSY.PA,Dassault Systemes,Logiciels
+EDEN.PA,Edenred,Services prepayes
+ENGI.PA,Engie,Energie
+EL.PA,EssilorLuxottica,Optique
+ERF.PA,Eurofins Scientific,Analyses biologiques
+RMS.PA,Hermes,Luxe
+KER.PA,Kering,Luxe
+OR.PA,L'Oreal,Cosmetique
+LR.PA,Legrand,Equipement electrique
+MC.PA,LVMH,Luxe
+ML.PA,Michelin,Pneumatiques
+ORA.PA,Orange,Telecom
+RI.PA,Pernod Ricard,Boissons
+PUB.PA,Publicis,Communication
+RNO.PA,Renault,Automobile
+SAF.PA,Safran,Aeronautique
+SGO.PA,Saint-Gobain,Materiaux de construction
+SAN.PA,Sanofi,Pharmaceutique
+SU.PA,Schneider Electric,Equipement electrique
+GLE.PA,Societe Generale,Banque
+STLAP.PA,Stellantis,Automobile
+STMPA.PA,STMicroelectronics,Semi-conducteurs
+TEP.PA,Teleperformance,Services aux entreprises
+HO.PA,Thales,Defense/Electronique
+TTE.PA,TotalEnergies,Energie
+URW.PA,Unibail-Rodamco-Westfield,Immobilier
+VIE.PA,Veolia,Environnement
+DG.PA,Vinci,BTP/Concessions
+WLN.PA,Worldline,Paiements

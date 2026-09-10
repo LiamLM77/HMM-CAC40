@@ -1,0 +1,73 @@
+{% extends "dashboard/base.html" %}
+{% block titre %}Accueil — Stratégie HMM CAC40{% endblock %}
+{% block contenu %}
+<div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-white">Tableau de bord</h1>
+    <form method="post" action="{% url 'dashboard:relancer_backtest' %}">
+        {% csrf_token %}
+        <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-bold px-5 py-2.5 rounded-lg shadow-lg shadow-emerald-500/20 transition">
+            ▶ Relancer le backtest
+        </button>
+    </form>
+</div>
+
+{% if backtest %}
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase tracking-wide">Capital final stratégie</p>
+        <p class="text-2xl font-bold text-white">{{ backtest.capital_final_portefeuille|floatformat:0 }} €</p>
+        <p class="text-xs text-slate-500">CAC40 : {{ backtest.capital_final_benchmark|floatformat:0 }} €</p>
+    </div>
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase tracking-wide">Rendement annualisé</p>
+        <p class="text-2xl font-bold {% if backtest.rendement_annualise_portefeuille < 0 %}text-red-400{% else %}text-emerald-400{% endif %}">
+            {{ backtest.rendement_annualise_portefeuille|floatformat:2 }} %
+        </p>
+        <p class="text-xs text-slate-500">CAC40 : {{ backtest.rendement_annualise_benchmark|floatformat:2 }} %</p>
+    </div>
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase tracking-wide">Sharpe / Max Drawdown</p>
+        <p class="text-2xl font-bold text-white">{{ backtest.sharpe_portefeuille|floatformat:2 }}</p>
+        <p class="text-xs text-slate-500">MDD : {{ backtest.max_drawdown_portefeuille|floatformat:2 }} %</p>
+    </div>
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase tracking-wide">Alpha / Bêta vs CAC40</p>
+        <p class="text-2xl font-bold text-white">{{ backtest.alpha_annualise|floatformat:2 }} %</p>
+        <p class="text-xs text-slate-500">Bêta : {{ backtest.beta_portefeuille|floatformat:2 }}</p>
+    </div>
+</div>
+
+<div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 mb-8 text-sm text-slate-400">
+    Backtest du {{ backtest.date_debut_test }} au {{ backtest.date_fin_test }} —
+    coûts de transaction totaux : {{ backtest.cout_transactions_total|floatformat:0 }} € —
+    taux sans risque moyen : {{ backtest.taux_sans_risque_moyen|floatformat:3 }}
+</div>
+{% else %}
+<p class="text-slate-400 mb-8">Aucun backtest exécuté pour l'instant. Clique sur "Relancer le backtest".</p>
+{% endif %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <a href="{% url 'dashboard:performance' %}" class="bg-slate-800 border border-slate-700 rounded-xl p-4 hover:border-emerald-500 hover:bg-slate-800/80 transition">
+        <p class="font-semibold text-white mb-1">📈 Performance</p>
+        <p class="text-sm text-slate-400">Courbe stratégie vs CAC40, métriques complètes.</p>
+    </a>
+    <a href="{% url 'dashboard:regimes' %}" class="bg-slate-800 border border-slate-700 rounded-xl p-4 hover:border-emerald-500 hover:bg-slate-800/80 transition">
+        <p class="font-semibold text-white mb-1">🧭 Régimes détectés</p>
+        <p class="text-sm text-slate-400">
+            {% if entrainement_hmm %}Dernier entraînement HMM : {{ entrainement_hmm.date_fin_fenetre }}{% else %}Aucun entraînement HMM{% endif %}
+        </p>
+    </a>
+    <a href="{% url 'dashboard:betas' %}" class="bg-slate-800 border border-slate-700 rounded-xl p-4 hover:border-emerald-500 hover:bg-slate-800/80 transition">
+        <p class="font-semibold text-white mb-1">β Bêtas des actions</p>
+        <p class="text-sm text-slate-400">
+            {% if calcul_beta %}{{ calcul_beta.nb_tickers }} actions, {{ calcul_beta.nb_dates_hebdomadaires }} dates{% else %}Aucun calcul de bêta{% endif %}
+        </p>
+    </a>
+    <a href="{% url 'dashboard:allocations' %}" class="bg-slate-800 border border-slate-700 rounded-xl p-4 hover:border-emerald-500 hover:bg-slate-800/80 transition">
+        <p class="font-semibold text-white mb-1">🗂 Allocations</p>
+        <p class="text-sm text-slate-400">
+            {% if allocation %}{{ allocation.nb_semaines }} dates de rééquilibrage, panier moyen {{ allocation.taille_panier_moyenne|floatformat:1 }}{% else %}Aucune allocation calculée{% endif %}
+        </p>
+    </a>
+</div>
+{% endblock %}

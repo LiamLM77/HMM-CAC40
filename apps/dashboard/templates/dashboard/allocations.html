@@ -1,0 +1,26 @@
+{% extends "dashboard/base.html" %}
+{% block titre %}Allocations — Stratégie HMM CAC40{% endblock %}
+{% block contenu %}
+<h1 class="text-3xl font-bold text-white mb-4">Allocations</h1>
+{% if a_des_donnees %}
+<form method="get" class="mb-4">
+<select name="date" onchange="this.form.submit()" class="bg-slate-800 border border-slate-700 text-slate-100 rounded-lg px-3 py-2 text-sm">
+{% for d in dates_disponibles %}
+<option value="{{ d|date:'Y-m-d' }}" {% if d == date_reference %}selected{% endif %}>{{ d|date:'Y-m-d' }}</option>
+{% endfor %}
+</select>
+</form>
+<div class="bg-slate-800 border border-slate-700 rounded-xl p-4 overflow-x-auto">
+<table class="w-full text-sm">
+<thead><tr class="text-left text-slate-400 border-b border-slate-700"><th class="py-2">Ticker</th><th>Poids</th><th>Régime dominant</th></tr></thead>
+<tbody>
+{% for l in lignes %}
+<tr class="border-b border-slate-800 last:border-0 text-slate-200"><td class="py-1.5 font-medium">{{ l.ticker }}</td><td>{{ l.poids|floatformat:3 }}</td><td>{{ l.regime }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% else %}
+<p class="text-slate-400">Aucune allocation disponible. Lance "python manage.py calculer_allocations".</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "dashboard/base.html" %}
+{% block titre %}Bêtas — Stratégie HMM CAC40{% endblock %}
+{% block contenu %}
+<h1 class="text-3xl font-bold text-white mb-2">Bêtas glissants ({{ date_reference }})</h1>
+{% if a_des_donnees %}
+<div class="bg-slate-800 border border-slate-700 rounded-xl p-4 overflow-x-auto mt-4">
+<table class="w-full text-sm">
+<thead><tr class="text-left text-slate-400 border-b border-slate-700">
+<th class="py-2">Ticker</th><th>Nom</th><th>Secteur</th><th>Bêta brut</th><th>Bêta ajusté</th><th>Momentum 63j</th><th>Classe</th>
+</tr></thead>
+<tbody>
+{% for l in lignes %}
+<tr class="border-b border-slate-800 last:border-0 text-slate-200">
+<td class="py-1.5 font-medium">{{ l.ticker }}</td><td>{{ l.nom }}</td><td class="text-slate-400">{{ l.secteur }}</td>
+<td>{{ l.beta_brut }}</td><td>{{ l.beta_ajuste }}</td><td>{{ l.momentum_63j }}</td>
+<td>
+<span class="px-2 py-0.5 rounded-full text-xs font-medium
+{% if l.classe == 'offensif' %}bg-emerald-500/15 text-emerald-400
+{% elif l.classe == 'défensif' %}bg-sky-500/15 text-sky-400
+{% elif l.classe == 'neutre' %}bg-amber-500/15 text-amber-400
+{% else %}bg-slate-700 text-slate-400{% endif %}">{{ l.classe }}</span>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% else %}
+<p class="text-slate-400">Aucun bêta disponible. Lance "python manage.py calculer_betas".</p>
+{% endif %}
+{% endblock %}

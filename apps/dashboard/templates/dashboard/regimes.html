@@ -1,0 +1,58 @@
+{% extends "dashboard/base.html" %}
+{% block titre %}Régimes détectés — Stratégie HMM CAC40{% endblock %}
+{% block contenu %}
+<h1 class="text-3xl font-bold text-white mb-6">Régimes de marché détectés (HMM)</h1>
+
+{% if a_des_donnees %}
+<div class="bg-slate-800 border border-slate-700 rounded-xl p-4 mb-6">
+    <canvas id="graphique-regimes" height="90"></canvas>
+    <p class="text-xs text-slate-500 mt-2">Chaque couleur représente le régime détecté par le HMM ce jour-là (superposé au cours du CAC40).</p>
+</div>
+
+<div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+    <h2 class="font-semibold text-white mb-3">Répartition des régimes (train vs test)</h2>
+    <table class="w-full text-sm">
+        <thead>
+            <tr class="text-left text-slate-400 border-b border-slate-700">
+                <th class="py-2">Ensemble</th>
+                <th>Régime</th>
+                <th>Nombre de jours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ligne in repartition %}
+            <tr class="border-b border-slate-800 last:border-0 text-slate-200">
+                <td class="py-1.5">{{ ligne.ensemble }}</td>
+                <td>{{ ligne.regime }}</td>
+                <td>{{ ligne.nb_jours }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#334155';
+    const ctx = document.getElementById('graphique-regimes');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ labels_json|safe }},
+            datasets: [
+                { label: 'Haussier', data: {{ serie_haussier_json|safe }}, borderColor: '#34d399', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, spanGaps: false },
+                { label: 'Neutre', data: {{ serie_neutre_json|safe }}, borderColor: '#fbbf24', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, spanGaps: false },
+                { label: 'Baissier', data: {{ serie_baissier_json|safe }}, borderColor: '#f87171', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, spanGaps: false },
+            ],
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            scales: { x: { ticks: { maxTicksLimit: 12 } } },
+        },
+    });
+</script>
+{% else %}
+<p class="text-slate-400">Aucun régime disponible. Lance d'abord "python manage.py entrainer_hmm".</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "dashboard/base.html" %}
+{% block titre %}Performance — Stratégie HMM CAC40{% endblock %}
+{% block contenu %}
+<h1 class="text-3xl font-bold text-white mb-6">Performance : stratégie vs CAC40</h1>
+
+{% if a_des_donnees %}
+<div class="bg-slate-800 border border-slate-700 rounded-xl p-4 mb-6">
+    <canvas id="graphique-performance" height="90"></canvas>
+</div>
+
+{% if backtest %}
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase">Volatilité annualisée</p>
+        <p class="text-lg font-bold text-white">{{ backtest.volatilite_portefeuille|floatformat:2 }} %</p>
+    </div>
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase">Sortino</p>
+        <p class="text-lg font-bold text-white">{{ backtest.sortino_portefeuille|floatformat:2 }}</p>
+    </div>
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase">Calmar</p>
+        <p class="text-lg font-bold text-white">{{ backtest.calmar_portefeuille|floatformat:2 }}</p>
+    </div>
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4">
+        <p class="text-xs text-slate-400 uppercase">VaR 95% (quotidien)</p>
+        <p class="text-lg font-bold text-white">{{ backtest.var_95_portefeuille|floatformat:2 }} %</p>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#334155';
+    const ctx = document.getElementById('graphique-performance');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ labels_json|safe }},
+            datasets: [
+                {
+                    label: 'Stratégie HMM',
+                    data: {{ portefeuille_json|safe }},
+                    borderColor: '#34d399',
+                    backgroundColor: 'transparent',
+                    pointRadius: 0,
+                    borderWidth: 2,
+                },
+                {
+                    label: 'CAC40 (buy & hold)',
+                    data: {{ benchmark_json|safe }},
+                    borderColor: '#94a3b8',
+                    backgroundColor: 'transparent',
+                    pointRadius: 0,
+                    borderWidth: 2,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            scales: { x: { ticks: { maxTicksLimit: 12 } } },
+        },
+    });
+</script>
+{% else %}
+<p class="text-slate-400">Aucun backtest disponible. Lance-le depuis la page d'accueil.</p>
+{% endif %}
+{% endblock %}
